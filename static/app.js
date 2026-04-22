@@ -86,6 +86,20 @@ function renderKanban(orders) {
                     }
                 };
                 card.appendChild(btn);
+            } else if (status.id === 'FALLIDA') {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-warning';
+                btn.style.marginTop = '0.5rem';
+                btn.style.fontSize = '0.75rem';
+                btn.style.backgroundColor = '#f59e0b';
+                btn.style.color = '#fff';
+                btn.textContent = '🔄 Reagendar (A Coordinación)';
+                btn.onclick = () => {
+                    if(confirm("¿Deseas reinsertar esta orden en el flujo de coordinación?")) {
+                        updateStatus(order.id, 'EN_COORDINACION');
+                    }
+                };
+                card.appendChild(btn);
             }
             col.appendChild(card);
         });
@@ -99,8 +113,8 @@ function renderMobileList(orders) {
     const list = document.getElementById('tech-tasks-container');
     list.innerHTML = '';
     
-    // Tech sees PROGRAMADA onwards, to do their job
-    const techOrders = orders.filter(o => !['NUEVA', 'EN_COORDINACION', 'COMPLETADA'].includes(o.status));
+    // Tech sees PROGRAMADA, EN_CAMINO, EN_SITIO, EN_ACTIVACION
+    const techOrders = orders.filter(o => !['NUEVA', 'EN_COORDINACION', 'COMPLETADA', 'FALLIDA'].includes(o.status));
     
     if(techOrders.length === 0) {
         list.innerHTML = '<p style="color:var(--text-muted)">No hay tareas asignadas.</p>';
